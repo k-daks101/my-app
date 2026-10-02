@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://promotion-stopping-contented.ngrok-free.dev",
+    "secure": false,
+    "changeOrigin": true,
+    "headers": {
+      "ngrok-skip-browser-warning": "true"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+<main class="feedbacktype-page">
+  <header class="feedbacktype-header">
+    <button
+      mat-icon-button
+      class="back-button"
+      type="button"
+      aria-label="Go back"
+      (click)="back.emit()"
+    >
+      <span aria-hidden="true">&#8249;</span>
+    </button>
+
+    <div class="progress" aria-label="Step 3 of 4">
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment"></span>
+    </div>
+  </header>
+
+  <section class="feedbacktype-content" aria-labelledby="feedbacktype-title">
+    <h1 id="feedbacktype-title">How should this be shared?</h1>
+    <p class="intro">
+      Choose once for this feedback. Anonymous feedback cannot later be linked back to you.
+    </p>
+
+    <form [formGroup]="shareForm" (ngSubmit)="submit()">
+      <div class="option-group" role="radiogroup" aria-label="Choose how to share feedback">
+        @for (option of shareOptions; track option.value) {
+          <label
+            class="option-card"
+            [class.option-card--selected]="shareForm.controls.shareMode.value === option.value"
+          >
+            <div class="option-header">
+              <span class="radio-mark" aria-hidden="true">
+                <span class="radio-inner"></span>
+              </span>
+              <input type="radio" formControlName="shareMode" [value]="option.value" />
+              <span class="option-title">{{ option.title }}</span>
+            </div>
+
+            @if (option.value === 'anonymous') {
+              <p class="option-copy">{{ option.description }}</p>
+            } @else {
+              <div
+                class="details"
+                [class.details--visible]="shareForm.controls.shareMode.value === 'named'"
+              >
+                <label class="field-group">
+                  <span class="field-label">Name</span>
+                  <input
+                    type="text"
+                    formControlName="name"
+                    autocomplete="name"
+                    [attr.aria-invalid]="shareForm.controls.name.invalid"
+                  />
+                  @if (
+                    shareForm.controls.name.touched && shareForm.controls.name.hasError('required')
+                  ) {
+                    <span class="field-error" role="alert">Enter your name.</span>
+                  }
+                </label>
+
+                <label class="field-group">
+                  <span class="field-label">Email</span>
+                  <input
+                    type="email"
+                    formControlName="email"
+                    autocomplete="email"
+                    [attr.aria-invalid]="shareForm.controls.email.invalid"
+                  />
+                  @if (
+                    shareForm.controls.email.touched &&
+                    shareForm.controls.email.hasError('required')
+                  ) {
+                    <span class="field-error" role="alert">Enter your email address.</span>
+                  } @else if (
+                    shareForm.controls.email.touched && shareForm.controls.email.hasError('email')
+                  ) {
+                    <span class="field-error" role="alert">Enter a valid email address.</span>
+                  }
+                </label>
+
+                <label class="field-group">
+                  <span class="field-label">Phone</span>
+                  <input
+                    type="tel"
+                    formControlName="phone"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    [attr.aria-invalid]="shareForm.controls.phone.invalid"
+                  />
+                  @if (
+                    shareForm.controls.phone.touched &&
+                    shareForm.controls.phone.hasError('required')
+                  ) {
+                    <span class="field-error" role="alert">Enter your phone number.</span>
+                  } @else if (
+                    shareForm.controls.phone.touched && shareForm.controls.phone.hasError('pattern')
+                  ) {
+                    <span class="field-error" role="alert">Enter a valid phone number.</span>
+                  }
+                </label>
+              </div>
+            }
+          </label>
+        }
+      </div>
+
+      <button mat-flat-button class="continue-button" type="submit">Continue</button>
+    </form>
+  </section>
+</main>

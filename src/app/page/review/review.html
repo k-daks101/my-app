@@ -1,0 +1,91 @@
+<main class="review-page">
+  <header class="review-header">
+    <button
+      mat-icon-button
+      class="back-button"
+      type="button"
+      aria-label="Go back"
+      (click)="back.emit()"
+    >
+      <span aria-hidden="true">&#8249;</span>
+    </button>
+
+    <div class="progress" aria-label="Step 4 of 4">
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment progress-segment--active"></span>
+    </div>
+  </header>
+
+  <section class="review-content" aria-labelledby="review-title">
+    <h1 id="review-title">Ready to share?</h1>
+    <p class="intro">Check everything before it is sent.</p>
+
+    <div class="summary-card" aria-label="Feedback summary">
+      @for (item of reviewItems(); track item.label) {
+        <div class="summary-row">
+          <span class="summary-label">{{ item.label }}</span>
+          <span class="summary-value" [class.feedback-text]="item.label === 'Feedback'">
+            {{ item.value }}
+          </span>
+          <button
+            type="button"
+            class="edit-link"
+            [attr.aria-label]="'Edit ' + item.label.toLowerCase()"
+            (click)="editItem(item.label)"
+          >
+            Edit
+          </button>
+        </div>
+      }
+
+      <div
+        class="share-badge"
+        [attr.aria-label]="
+          feedback().shareMode === 'anonymous' ? 'Anonymous submission' : 'Named submission'
+        "
+      >
+        {{ feedback().shareMode === 'anonymous' ? 'Anonymous' : 'Named' }}
+      </div>
+    </div>
+
+    <div class="notice-box" role="note" aria-live="polite">
+      <div class="notice-icon" aria-hidden="true">i</div>
+      <div class="notice-copy">
+        <strong>
+          {{
+            feedback().shareMode === 'anonymous'
+              ? 'Submitting anonymously'
+              : 'Submitting with your name'
+          }}
+        </strong>
+        <p>
+          {{
+            feedback().shareMode === 'anonymous'
+              ? 'Your identity will not be included and cannot be restored later.'
+              : 'Your contact details will be included for follow-up.'
+          }}
+        </p>
+      </div>
+    </div>
+
+    @if (submissionError()) {
+      <p class="validation-message" role="alert">{{ submissionError() }}</p>
+    }
+
+    @if (submissionComplete()) {
+      <p class="success-message" role="status">Feedback submitted successfully.</p>
+    } @else {
+      <button
+        mat-flat-button
+        class="submit-button"
+        type="button"
+        [disabled]="isSubmitting()"
+        (click)="submitFeedback.emit()"
+      >
+        {{ isSubmitting() ? 'Submitting...' : 'Submit feedback' }}
+      </button>
+    }
+  </section>
+</main>

@@ -1,0 +1,170 @@
+<main class="method-page">
+  <header class="method-header">
+    <button
+      mat-icon-button
+      class="back-button"
+      type="button"
+      aria-label="Go back"
+      (click)="back.emit()"
+    >
+      <span aria-hidden="true">&#8249;</span>
+    </button>
+
+    <div class="progress" aria-label="Step 2 of 4">
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment"></span>
+      <span class="progress-segment"></span>
+    </div>
+  </header>
+
+  <section class="method-content" aria-labelledby="method-title">
+    <h1 id="method-title">Tell us in your own way</h1>
+    <p class="intro">Use whichever methods feel easiest. You can combine text, voice and files.</p>
+
+    <form [formGroup]="methodForm" (ngSubmit)="submit()">
+      <mat-chip-listbox
+        aria-label="Choose a feedback method"
+        formControlName="method"
+        (change)="onMethodChange($event.value)"
+      >
+        @for (option of methodOptions; track option) {
+          <mat-chip-option [value]="option">{{ option }}</mat-chip-option>
+        }
+      </mat-chip-listbox>
+
+      @if (methodForm.controls.method.value === 'Attach file') {
+        <section class="attachment-options" aria-label="Add an attachment">
+          <button type="button" class="attachment-option camera-option" (click)="openCamera()">
+            <span class="attachment-icon" aria-hidden="true">&#128247;</span>
+            <span>Take photo</span>
+            <span class="attachment-trigger">Open camera</span>
+          </button>
+          <label class="attachment-option">
+            <span class="attachment-icon" aria-hidden="true">&#128196;</span>
+            <span>Choose file</span>
+            <input type="file" multiple (change)="selectFiles($event)" />
+          </label>
+        </section>
+
+        @if (showCamera()) {
+          <section class="camera-panel" aria-label="Camera preview">
+            <video #cameraPreview autoplay playsinline muted></video>
+            <div class="camera-controls">
+              <button mat-flat-button type="button" (click)="capturePhoto()">Take photo</button>
+              <button mat-button type="button" (click)="closeCamera()">Cancel</button>
+            </div>
+          </section>
+        }
+
+        @if (cameraError()) {
+          <p class="validation-message" role="alert">{{ cameraError() }}</p>
+        }
+
+        <section class="uploads" aria-labelledby="uploads-title">
+          <p id="uploads-title">Your uploads</p>
+          @for (upload of uploads(); track $index) {
+            <div class="upload-row">
+              <div>
+                <p>{{ upload.name }}</p>
+                <span
+                  >{{ upload.size
+                  }}{{ upload.progress ? ' · uploading ' + upload.progress + '%' : '' }}</span
+                >
+              </div>
+              <span
+                class="upload-status"
+                [class.upload-status--uploading]="upload.status === 'Uploading'"
+              >
+                <span aria-hidden="true">&#8226;</span> {{ upload.status }}
+              </span>
+            </div>
+          }
+        </section>
+      } @else if (methodForm.controls.method.value === 'Voice to text') {
+        <section class="recording-panel" aria-label="Voice recording">
+          <div class="recording-meta">
+            <span class="recording-status">
+              <span class="recording-dot" [class.recording-dot--paused]="!isRecording()"></span>
+              {{
+                isRecording()
+                  ? 'Transcribing'
+                  : hasRecordingStarted()
+                    ? 'Paused'
+                    : 'Ready to record'
+              }}
+            </span>
+            <span>{{ recordingTime() }}</span>
+          </div>
+
+          <div class="waveform" aria-hidden="true">
+            @for (height of waveform; track $index) {
+              <span [style.height.px]="height"></span>
+            }
+          </div>
+
+          <div class="recording-controls">
+            <button
+              mat-icon-button
+              class="record-button"
+              type="button"
+              [disabled]="isStartingRecording()"
+              aria-label="Start recording over"
+              title="Start recording over"
+              (click)="restartRecording()"
+            >
+              <span aria-hidden="true"></span>
+            </button>
+            <button
+              mat-icon-button
+              class="play-button"
+              type="button"
+              [disabled]="isStartingRecording()"
+              [attr.aria-label]="isRecording() ? 'Pause recording' : 'Resume recording'"
+              [attr.title]="isRecording() ? 'Pause recording' : 'Resume recording'"
+              (click)="toggleRecording()"
+            >
+              <span aria-hidden="true">{{ isRecording() ? '||' : '▶' }}</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="transcript" aria-labelledby="transcript-title">
+          <p id="transcript-title">Live transcript</p>
+          <p>{{ methodForm.controls.message.value }}</p>
+        </section>
+
+        @if (!transcriptionAvailable()) {
+          <p class="validation-message" role="alert">
+            Live transcription is not supported in this browser. Choose Type out instead.
+          </p>
+        }
+
+        @if (transcriptionError()) {
+          <p class="validation-message" role="alert">{{ transcriptionError() }}</p>
+        }
+      } @else {
+        <textarea
+          aria-label="Feedback message"
+          formControlName="message"
+          placeholder="What do you want to talk about today?"
+          rows="6"
+        ></textarea>
+      }
+
+      @if (showValidation()) {
+        <p class="validation-message" role="alert">
+          {{
+            methodForm.controls.method.value === 'Attach file'
+              ? 'Add a file to continue.'
+              : methodForm.controls.method.value === 'Voice to text'
+                ? 'Record your voice before continuing.'
+                : 'Add a message to continue.'
+          }}
+        </p>
+      }
+
+      <button mat-flat-button class="continue-button" type="submit">Continue</button>
+    </form>
+  </section>
+</main>

@@ -1,0 +1,57 @@
+<main class="theme-page">
+  <header class="theme-header">
+    <img
+      class="brand-logo"
+      ngSrc="/real-shield.png"
+      width="38"
+      height="46"
+      alt="Stanbic Bank"
+      priority
+    />
+
+    <div class="progress" aria-label="Step 1 of 4">
+      <span class="progress-segment progress-segment--active"></span>
+      <span class="progress-segment"></span>
+      <span class="progress-segment"></span>
+      <span class="progress-segment"></span>
+    </div>
+  </header>
+
+  <section class="theme-content" aria-labelledby="theme-title">
+    <h1 id="theme-title">What is on your mind?</h1>
+    <p class="intro">Choose a theme you want to give feedback on.</p>
+
+    <form [formGroup]="themeForm" (ngSubmit)="submit()">
+      <mat-chip-listbox aria-label="Choose a feedback theme" formControlName="themes">
+        @for (option of themeOptions; track option) {
+          <mat-chip-option [value]="option">{{ option }}</mat-chip-option>
+        }
+      </mat-chip-listbox>
+
+      @if (themeForm.controls.themes.value === 'Other') {
+        <label class="other-theme-field">
+          <span>Tell us more</span>
+          <input
+            type="text"
+            formControlName="otherTheme"
+            placeholder="Describe your theme"
+            [attr.aria-invalid]="
+              themeForm.controls.otherTheme.touched && !themeForm.controls.otherTheme.value.trim()
+            "
+          />
+          @if (
+            themeForm.controls.otherTheme.touched && !themeForm.controls.otherTheme.value.trim()
+          ) {
+            <span class="field-error" role="alert">Tell us what your theme is.</span>
+          }
+        </label>
+      }
+
+      @if (themeForm.controls.themes.touched && themeForm.controls.themes.invalid) {
+        <p class="validation-message" role="alert">Choose at least one theme to continue.</p>
+      }
+
+      <button mat-flat-button class="continue-button" type="submit">Continue</button>
+    </form>
+  </section>
+</main>
