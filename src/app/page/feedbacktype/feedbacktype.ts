@@ -56,10 +56,6 @@ export class Feedbacktype {
       }
     }
 
-    console.log('Share mode:', this.shareForm.controls.shareMode.value);
-    console.log('Name:', this.shareForm.controls.name.value);
-    console.log('Email:', this.shareForm.controls.email.value);
-    console.log('Phone:', this.shareForm.controls.phone.value);
     this.next.emit({
       shareMode: this.shareForm.controls.shareMode.value,
       name: this.shareForm.controls.name.value,

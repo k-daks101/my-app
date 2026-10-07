@@ -55,6 +55,5 @@ export class Theme {
 
     const selectedTheme = theme === 'Other' ? `Other: ${otherTheme}` : theme;
     this.next.emit(selectedTheme);
-    console.log('Selected theme:', selectedTheme);
   }
 }

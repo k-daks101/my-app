@@ -350,9 +350,10 @@ export class Method {
         size: this.formatFileSize(file.size),
         status: 'Uploaded' as const,
         file,
-        previewUrl: file.type.startsWith('image/') && typeof URL.createObjectURL === 'function'
-          ? URL.createObjectURL(file)
-          : undefined,
+        previewUrl:
+          file.type.startsWith('image/') && typeof URL.createObjectURL === 'function'
+            ? URL.createObjectURL(file)
+            : undefined,
       })),
     ]);
   }
@@ -398,8 +399,6 @@ export class Method {
       return;
     }
 
-    console.log('Feedback method:', method);
-    console.log('Feedback message:', this.methodForm.controls.message.value);
     await this.finalizeRecording();
     this.next.emit({
       method,
