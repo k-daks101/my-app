@@ -224,6 +224,23 @@ textarea:focus {
 	text-transform: uppercase;
 }
 
+.transcript textarea {
+	border: 1px solid #d9dfe9;
+	border-radius: 0.3rem;
+	box-sizing: border-box;
+	font: inherit;
+	line-height: 1.45;
+	min-height: 6rem;
+	padding: 0.6rem;
+	resize: vertical;
+	width: 100%;
+}
+
+.transcript textarea:focus {
+	border-color: #0757f5;
+	outline: 2px solid rgb(7 87 245 / 18%);
+}
+
 .attachment-options {
 	display: grid;
 	gap: 0.5rem;
@@ -320,6 +337,29 @@ textarea:focus {
 	justify-content: space-between;
 	margin-top: 0.45rem;
 	padding: 0.65rem;
+}
+
+.upload-preview {
+	border: 1px solid #d9dfe9;
+	border-radius: 0.3rem;
+	display: block;
+	flex: 0 0 3.5rem;
+	height: 3.5rem;
+	overflow: hidden;
+	width: 3.5rem;
+}
+
+.upload-preview:focus {
+	border-color: #0757f5;
+	outline: 2px solid rgb(7 87 245 / 18%);
+	outline-offset: 2px;
+}
+
+.upload-preview img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
 }
 
 .upload-row p,

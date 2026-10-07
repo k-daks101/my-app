@@ -82,6 +82,7 @@ export class Method {
   reset(): void {
     void this.finalizeRecording();
     this.closeCamera();
+    this.revokeUploadPreviews();
     this.methodForm.reset({ method: 'Attach file', message: '' });
     this.methodForm.markAsPristine();
     this.methodForm.markAsUntouched();
@@ -349,8 +350,23 @@ export class Method {
         size: this.formatFileSize(file.size),
         status: 'Uploaded' as const,
         file,
+        previewUrl: file.type.startsWith('image/') && typeof URL.createObjectURL === 'function'
+          ? URL.createObjectURL(file)
+          : undefined,
       })),
     ]);
+  }
+
+  private revokeUploadPreviews(): void {
+    for (const upload of this.uploads()) {
+      if (upload.previewUrl) {
+        URL.revokeObjectURL(upload.previewUrl);
+      }
+    }
+  }
+
+  onTranscriptEdit(value: string): void {
+    this.finalTranscript = value;
   }
 
   private formatFileSize(bytes: number): string {

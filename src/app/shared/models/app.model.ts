@@ -13,6 +13,7 @@ export interface FeedbackUpload {
   status: 'Uploaded' | 'Uploading';
   progress?: number;
   file?: File;
+  previewUrl?: string;
   attachmentKey?: string;
   contentType?: string;
 }

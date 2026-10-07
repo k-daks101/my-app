@@ -65,6 +65,17 @@
           <p id="uploads-title">Your uploads</p>
           @for (upload of uploads(); track $index) {
             <div class="upload-row">
+              @if (upload.previewUrl) {
+                <a
+                  class="upload-preview"
+                  [href]="upload.previewUrl"
+                  target="_blank"
+                  rel="noopener"
+                  [attr.aria-label]="'Open a full-size preview of ' + upload.name"
+                >
+                  <img [src]="upload.previewUrl" [alt]="'Preview of ' + upload.name" />
+                </a>
+              }
               <div>
                 <p>{{ upload.name }}</p>
                 <span
@@ -131,7 +142,13 @@
 
         <section class="transcript" aria-labelledby="transcript-title">
           <p id="transcript-title">Live transcript</p>
-          <p>{{ methodForm.controls.message.value }}</p>
+          <textarea
+            aria-label="Edit transcript"
+            formControlName="message"
+            placeholder="Your transcription will appear here"
+            rows="5"
+            (input)="onTranscriptEdit(methodForm.controls.message.value)"
+          ></textarea>
         </section>
 
         @if (!transcriptionAvailable()) {
